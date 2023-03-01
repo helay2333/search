@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索之旅:尝试搜索一个ArrayList吧!</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <input type="text" name="" id="">
+            <button id="search-btn">搜索</button>
+        </div>
+        <div class="result">
+
+            <!-- <div class="item">
+                
+            </div> -->
+        </div>
+    </div>
+    
+    <style>
+        . {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            height: 100%;
+            background-image: url(image/02.jpg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover ;
+        }
+        .container{
+            height: 100%;
+            width: 1200px;
+            margin: 0 auto ;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 10px;
+            padding: 20px;
+
+            overflow: auto;
+        }
+        .header{
+            width: 100%;
+            height:50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header>input{
+            width: 1050px;
+            height: 50px;
+            font-size: 22px;
+            line-height: 50px;
+            padding-left: 10px;
+            border-radius: 10px ;
+        }
+        .header>button{
+            width: 100px;
+            height: 50px;
+            background-color: blue;
+            color: #fff;
+            font-size: 22px;
+            line-height: 50px;
+            border-radius: 10px;
+            border: none ;
+        }
+        .header>button:active{
+            background: rgb(88, 85, 85);
+        }
+        .result .count {
+            color: grey;
+            margin-top: 10px;
+        }
+        .item{
+            width: 100%;
+        }
+        .item a {
+            display: block;
+            height: 40px;
+
+            font-size: 22px;
+            line-height: 40px;
+            font-weight: 700;
+
+            color: rgb(42,107,205);
+        }
+
+        .item .desc {
+            font-size: 18px;
+        }
+
+        .item .url {
+            font-size: 18px;
+            color: rgb(0, 128, 0);
+        }
+
+        .item .desc i {
+            color: red;
+            /* 去掉斜体 */
+            font-style: normal;
+        }
+    </style>
+    <script src="js/jquery.min.js"></script>
+    <script>
+        let button = document.querySelector("#search-btn")
+        button.onclick = function() {
+            //获取得到输入框的内容
+            let input = document.querySelector(".header input")
+            let query = input.value
+            console.log(query);
+            $.ajax({
+                type:'GET',
+                url:'searcher?query=' + query,
+                success:function(data, status){
+                    console.log(data);
+                    buildResult(data)
+                }
+            })
+        }
+        function buildResult(data) {
+            let result = document.querySelector('.result')
+            result.innerHTML = ""
+            //通过这个函数, 把响应数据构造成页面内容
+            //遍历data中的每个元素, 针对每个元素, 创建div到div.result
+            //这些操作都是基于DOM API来展开的
+
+            let countDiv = document.createElement('div')
+            countDiv.className = 'count'
+            countDiv.innerHTML = '当前找到' + data.length + '个结果'
+            result.appendChild(countDiv)
+            for(let item of data) {
+                let itemDiv = document.createElement('div')
+                itemDiv.className = 'item'
+                let title = document.createElement('a')
+                title.href = item.url
+                title.innerHTML = item.title
+                title.target = "_blank"
+                itemDiv.appendChild(title)
+
+                let desc = document.createElement('div')
+                desc.className = 'desc'
+                desc.innerHTML = item.desc
+                itemDiv.appendChild(desc)
+
+                let url = document.createElement('div')
+                url.className = 'url'
+                url.innerHTML = item.url
+                itemDiv.appendChild(url)
+                
+                result.appendChild(itemDiv)   
+            }
+        }
+        
+     </script>
+</body>
+</html>
